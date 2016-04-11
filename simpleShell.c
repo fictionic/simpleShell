@@ -186,7 +186,6 @@ int main() {
 			
 			// create pipe
 			pipe(cur_pipe);
-			//printf("cur_pipe: [%d,%d]\n", cur_pipe[0], cur_pipe[1]);
 
 			// send output to the next pipe
 			fd_out = cur_pipe[1];
@@ -198,12 +197,10 @@ int main() {
 			fd_in = cur_pipe[0];
 
 			// close write end of pipe
-			//printf("closing %d in parent\n", cur_pipe[1]);
 			close(cur_pipe[1]);
 
 			// wait for child to terminate, if we're supposed to
 			if(!no_wait) {
-				//printf("waiting for child...\n");
 				waitpid(childPID, NULL, 0);
 			}
 
@@ -250,18 +247,16 @@ int spawn_process(int fd_in, int fd_out, char** cmd) {
 	pid_t childPID = fork();
 	if(childPID == 0) { // child process
 		if(fd_in != 0) {
-			//printf("redirecting stdin to %d\n", fd_in);
 			dup2(fd_in, 0);
-			//printf("closing %d in child\n", fd_in);
 			close(fd_in);
 		}
 		if(fd_out != 1) {
-			//printf("redirecting stdout to %d\n", fd_out);
 			dup2(fd_out, 1);
-			//printf("closing %d in child\n", fd_out);
 			close(fd_out);
 		}
-		return execvp(cmd[0], cmd);
+		execvp(cmd[0], cmd);
+		printf("execvp: Error: %s\n", strerror(errno));
+		return 1;
 	} else { // parent process
 		return childPID;
 	}
