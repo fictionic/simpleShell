@@ -270,7 +270,10 @@ char* readLine() {
 
 	// read actual line of input from terminal
 	char* line = (char*) malloc( MAX_TOKEN_LENGTH+1 );
-	if(getline(&line, &MAX_TOKEN_LENGTH, stdin) > MAX_TOKEN_LENGTH) {
+	int len = getline(&line, &MAX_TOKEN_LENGTH, stdin);
+	if(len == -1)
+		return 0;
+	if(len > MAX_TOKEN_LENGTH) {
 		printf("WARNING: line is longer than %d characters!\n", (int)MAX_TOKEN_LENGTH);
 		fflush(stdout);
 		return NULL;
