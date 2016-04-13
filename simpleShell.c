@@ -15,8 +15,6 @@ size_t MAX_NUM_TOKENS = 51;
 
 char* readLine();
 char** lex(char* line);
-char*** parse(char* line);
-void print_strings(char** strings);
 int spawn_process(int fd_in, int fd_out, char** cmd);
 
 int main() {
@@ -314,13 +312,3 @@ char** lex(char* line) {
 	return tokens;
 }
 
-void print_strings(char** strings) {
-	int k=0;
-	while(strings[k] != NULL) {
-		printf("%s ", strings[k]);
-		fflush(stdout);
-		k++;
-	}
-	printf("\n");
-	fflush(stdout);
-}
