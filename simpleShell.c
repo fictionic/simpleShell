@@ -209,12 +209,9 @@ int main() {
 			// try to open the output file
 			fd_out = open(outfiles[cmd_i], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 			if(fd_out == -1) {
-				fd_out = open(outfiles[cmd_i], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-				if (fd_out == -1) {
-					printf("open: Error: %s\n", strerror(errno));
-					fflush(stdout);
-					return 1;
-				}
+				printf("open: Error: %s\n", strerror(errno));
+				fflush(stdout);
+				return 1;
 			}
 		} else {
 			fd_out = 1; // last child's output is parent's output by default
