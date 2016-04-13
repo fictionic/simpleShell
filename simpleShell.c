@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-// A line may be at most 100 characters long, which means longest word is 100 chars, 
+// A line may be at most 100 characters long, which means longest word is 100 chars,
 // and max possible tokens is 51 as must be space between each
 size_t MAX_TOKEN_LENGTH = 100;
 size_t MAX_NUM_TOKENS = 51;
@@ -181,7 +181,7 @@ int main() {
 		}
 
 		for(cmd_i = 0; cmd_i < num_commands-1; cmd_i++) {
-			
+
 			// create pipe
 			pipe(cur_pipe);
 
@@ -209,14 +209,17 @@ int main() {
 			// try to open the output file
 			fd_out = open(outfiles[cmd_i], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 			if(fd_out == -1) {
-				printf("open: Error: %s\n", strerror(errno));
-				fflush(stdout);
-				return 1;
+				fd_out = open(outfiles[cmd_i], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+				if (fd_out == -1) {
+					printf("open: Error: %s\n", strerror(errno));
+					fflush(stdout);
+					return 1;
+				}
 			}
 		} else {
 			fd_out = 1; // last child's output is parent's output by default
 		}
-		
+
 		// fork and exec
 		childPID = spawn_process(fd_in, fd_out, commands[cmd_i]);
 
@@ -261,7 +264,7 @@ int spawn_process(int fd_in, int fd_out, char** cmd) {
 
 }
 
-/* 
+/*
  *reads a single line from terminal
  */
 char* readLine() {
@@ -280,7 +283,7 @@ char* readLine() {
 	return line;
 }
 
-/* 
+/*
  *lex the line read into an array of tokens
  */
 char** lex(char* line) {
@@ -302,13 +305,12 @@ char** lex(char* line) {
 
 	// check if we quit because of going over allowed word limit
 	if (i == MAX_NUM_TOKENS) {
-		printf( "WARNING: line contains more than %d tokens!\n", (int)MAX_NUM_TOKENS ); 
+		printf( "WARNING: line contains more than %d tokens!\n", (int)MAX_NUM_TOKENS );
 		fflush(stdout);
-	} 
+	}
 	else
 		tokens[i] = NULL;
 
 	// return the list of tokens
 	return tokens;
 }
-
